@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import authRouter from './routes/auth.router.js'
 dotenv.config();
 
 
@@ -16,9 +17,11 @@ app.get("/",(req,res)=>{
 })
 const port=process.env.PORT||9000;
 
-mongoose.connect(process.env.MONGODB,{
-    
-})
+app.use("/api/v1/auth",authRouter)
+
+mongoose.connect(process.env.MONGODB).then(()=>
+    console.log("Database is connected")
+).catch((err)=>{console.log(err)})
 
 app.listen(port,()=>{
     console.log(`Server is runing on port ${port}`);
