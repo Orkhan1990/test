@@ -13,7 +13,7 @@ const Header = () => {
                <span className="text-slate-700 font-bold">Estate</span>
                </Link>
                </h1>
-             <form className="flex items-center border rounded bg-slate-100 p-1">
+             <form className="flex items-center border rounded bg-slate-100 p-2">
                 <input type="text" placeholder="Search..." className="bg-transparent outline-none w-24 sm:w-64"/>
                 <IoIosSearch className="text-xl text-slate-400"/>
              </form>
