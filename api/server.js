@@ -2,7 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import authRouter from './routes/auth.router.js'
+import authRouter from './routes/auth.router.js';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 dotenv.config();
 
 
@@ -10,15 +12,19 @@ const app=express();
 
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(cookieParser())
 app.use(cors());
 
 app.get("/",(req,res)=>{
     res.status(200).json({message:"Hello World!"})
 })
-app.use((err,req,res,next)=>{
-    const statusCode=err.statusCode||500;
-    const message=err.message||"Internal Server Error!";
-    return res.status(statusCode).json({
+app.use((error,req,res,next)=>{
+    const statusCode=error.statusCode||500;
+    const message=error.message||"Internal Server Error!";
+    console.log(message);
+    res.status(statusCode).json({
         success:false,
         message,
         statusCode
