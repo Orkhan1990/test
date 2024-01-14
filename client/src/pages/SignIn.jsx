@@ -6,6 +6,7 @@ import {
   signInError,
   signInLoading,
 } from "../redux-toolkit/user/userSlice.js";
+import OAuth from "../components/OAuth.jsx";
 
 const SignIn = () => {
 
@@ -35,18 +36,20 @@ const SignIn = () => {
       });
 
       const data = await result.json();
-      dispatch(signInSuccess(data));
+      dispatch(signInSuccess(data.rest));
       console.log(data);
       if (data.success === false) {
         dispatch(signInError(data.message));
         return;
       }
-      dispatch(signInSuccess(data));
+      dispatch(signInSuccess(data.rest));
       navigate("/");
     } catch (error) {
       dispatch(signInError(error.message));
     }
   };
+
+
 
   console.log(formData);
   return (
@@ -79,9 +82,7 @@ const SignIn = () => {
             {loading ? "Loading...." : "Sign In"}
           </button>
         </form>
-        <button className="bg-red-700 text-white uppercase rounded-md p-2 font-semibold w-full mt-2 mb-1 hover:bg-red-900 ">
-          Continue with Google
-        </button>
+         <OAuth/>
         <div>
           <span>
             Do not have any account?

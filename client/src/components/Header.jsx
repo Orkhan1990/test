@@ -1,9 +1,13 @@
 import { IoIosSearch } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
 
 const Header = () => {
+
+  const {currentUser}=useSelector(state=>state.user);
+  console.log(currentUser);
   return (
     <header className="bg-slate-200 p-3 shadow-md sticky top-0">
           <div className="max-w-6xl mx-auto flex justify-between">
@@ -20,10 +24,9 @@ const Header = () => {
              <ul className="flex items-center space-x-4">
                 <li className="hidden sm:inline text-slate-700 hover:underline"><Link to={"/"}>Home</Link></li>
                 <li className="hidden sm:inline text-slate-700 hover:underline"><Link to="/about">About</Link></li>
-                <li className="text-slate-700 hover:underline"><Link to="/signIn">
-                 Sign in
-                {/* <img src="https://icon-library.com/images/no-user-image-icon/no-user-image-icon-3.jpg" alt="picture" className="w-6 border rounded-full"/> */}
-                </Link></li>
+                <li className="text-slate-700 hover:underline">
+                  {currentUser?(<Link to="/profile"><img src={currentUser.imageUrl} alt="picture" className="w-7 border rounded-full"/></Link>):(<Link to="/signIn">Sign in</Link>)}
+                </li>
              </ul>
           </div>
     </header>

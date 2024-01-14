@@ -4,8 +4,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState={
-    currentUser:{},
-    token:"",
+    currentUser:null,
+    // token:"",
     error:"",
     loading:false
 }
@@ -14,8 +14,8 @@ export const userSlice=createSlice({
     initialState,
     reducers:{
          signInSuccess:(state,action)=>{
-            state.currentUser=action.payload.rest
-            state.token=action.payload.token
+            state.currentUser=action.payload
+            // state.token=action.payload.token
             state.loading=false
             state.error=""
          },
@@ -28,8 +28,8 @@ export const userSlice=createSlice({
              state.loading=false;
          },
          signOut:(state)=>{
-            state.currentUser="",
-            state.token=""
+            state.currentUser=""
+            // state.token=""
          }
     }
 });
