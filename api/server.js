@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRouter from './routes/auth.router.js';
+import userRouter from './routes/user.router.js';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 dotenv.config();
@@ -33,7 +34,8 @@ app.use((error,req,res,next)=>{
 
 const port=process.env.PORT||9000;
 
-app.use("/api/v1/auth",authRouter)
+app.use("/api/v1/auth",authRouter);
+app.use('/api/v1/profile',userRouter);
 
 mongoose.connect(process.env.MONGODB).then(()=>
     console.log("Database is connected")
