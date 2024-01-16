@@ -31,3 +31,18 @@ export const updateProfile=async(req,res,next)=>{
     }
     
 }
+
+
+export const deleteUser=async(req,res,next)=>{
+    if(req.user.id!==req.params.id){
+        return res.status(401).json({success:false,message:"You can delete only your account!"})
+    }
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.clearCookie("access_token");
+        return res.status(200).json({message:"User delete successfuly"});
+        
+    } catch (error) {
+        next(error)
+    }
+}

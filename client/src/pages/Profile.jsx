@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { useSelector,useDispatch } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { app } from "../firebase";
@@ -8,13 +8,14 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { updateUserError, updateUserLoading, updateUserSuccess } from "../redux-toolkit/user/userSlice";
+import { deleteUserSuccess, signOut, updateUserError, updateUserLoading, updateUserSuccess } from "../redux-toolkit/user/userSlice";
 
 const Profile = () => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser,error,loading} = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [fileProgress, setFileProgress] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
+  const[updateProfileSuccess,setUpdateProfileSuccess]=useState(false);
   const dispatch=useDispatch();
   const fileRef = useRef(null);
   console.log(fileProgress);
@@ -26,14 +27,14 @@ const Profile = () => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-
+  //UPDATE PROFILE
   const handleSubmit = async (e) => {
     e.preventDefault();
    dispatch(updateUserLoading());
 
    try {
      const result = await fetch(
-       `http://localhost:3007/api/v1/profile//updateProfile/${currentUser._id}`,
+       `http://localhost:3007/api/v1/profile/updateProfile/${currentUser._id}`,
        {
          method: "POST",
          headers: {
@@ -48,6 +49,7 @@ const Profile = () => {
      }
 
      dispatch(updateUserSuccess(data.rest))
+     setUpdateProfileSuccess(true);
      console.log(data);
     
    } catch (error) {
@@ -55,12 +57,33 @@ const Profile = () => {
    }
   };
 
+
+
+  //DELETE USER(DELETE BUTTON)
+  const handleDelete=async()=>{
+    
+    try {
+      const result=await fetch(`http://localhost:3007/api/v1/profile/deleteProfile/${currentUser._id}`,
+      {
+        method:"DELETE"
+      })
+      
+      const data=result.json();
+      console.log(data);
+      dispatch(deleteUserSuccess());
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
     }
   }, [file]);
 
+
+  //FILE (IMAGES UPLOAD)
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
@@ -86,8 +109,23 @@ const Profile = () => {
     );
   };
 
-  console.log(file);
-  console.log(formData);
+
+  //SIGN OUT
+
+  const handleSignOut=async()=>{
+
+    try {
+      const result=await fetch("http://localhost:3007/api/v1/auth/signOut");
+      const data=result.json();
+      console.log(data);
+      dispatch(signOut())
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+
+
   return (
     <div className="max-w-[400px] mx-auto text-center mt-10">
       <h1 className="text-3xl font-semibold">Profile</h1>
@@ -137,19 +175,21 @@ const Profile = () => {
           className="p-2 rounded-md"
           onChange={handleChange}
         />
-        <button disabled={currentUser.loading} className="bg-slate-700  text-white uppercase rounded-md p-2 hover:bg-slate-500">
-         {currentUser.loading?"LOading....":"Update"}
+        <button disabled={loading} className="bg-slate-700  text-white uppercase rounded-md p-2 hover:bg-slate-500">
+         {loading?"Loading....":"Update"}
         </button>
         <button className="bg-green-700  text-white uppercase rounded-md p-2 hover:bg-green-500">
           <Link>Create Listing</Link>
         </button>
       </form>
       <div className="flex justify-between my-2 text-red-700 ">
-        <span className="cursor-pointer hover:text-red-400">
+        <span onClick={handleDelete} className="cursor-pointer hover:text-red-400">
           Delete Account
         </span>
-        <span className="cursor-pointer hover:text-red-500">Sign Out</span>
+        <span onClick={handleSignOut} className="cursor-pointer hover:text-red-500">Sign Out</span>
       </div>
+      {error&&(<span className="text-red-700 text-sm">{error.message}</span>)}
+      {updateProfileSuccess&&(<span className="text-green-700 text-sm">User is updated successfuly!</span>)}
       <span className="text-green-700 cursor-pointer hover:text-green-400">
         Show listing
       </span>
