@@ -179,7 +179,7 @@ const Profile = () => {
          {loading?"Loading....":"Update"}
         </button>
         <button className="bg-green-700  text-white uppercase rounded-md p-2 hover:bg-green-500">
-          <Link>Create Listing</Link>
+          <Link to="/create-listing">Create Listing</Link>
         </button>
       </form>
       <div className="flex justify-between my-2 text-red-700 ">
