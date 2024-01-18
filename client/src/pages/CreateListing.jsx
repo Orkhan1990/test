@@ -60,15 +60,15 @@ const CreateListing = () => {
             <div className="flex flex-col flex-1 gap-4">
                <div className="flex items-center">
                 <h2 className="font-bold text-[18px]">Images:</h2>
-                <p>The first image will be the cover (max6)</p>
+                <p className="text-gray-500 ml-1">The first image will be the cover (max6)</p>
                </div>
                <div className="flex space-x-3">
                 <div className="p-2 border border-gray-400 rounded-lg">
-                    <input type="file" id="file" />
+                    <input type="file" id="images" accept="image/*" multiple/>
                 </div>
                     <button className="uppercase p-4 border border-green-500 text-green-500 rounded-lg hover:bg-green-700 hover:text-white">Upload</button>
                </div>
-               <button className="p-2 bg-slate-700 text-white uppercase rounded-lg">Create Listing</button>
+               <button className="p-2 bg-slate-700 text-white uppercase rounded-lg hover:opacity-70 disabled:opacity-70">Create Listing</button>
             </div>
          </form>
 
