@@ -178,9 +178,11 @@ const Profile = () => {
         <button disabled={loading} className="bg-slate-700  text-white uppercase rounded-md p-2 hover:bg-slate-500">
          {loading?"Loading....":"Update"}
         </button>
-        <button className="bg-green-700  text-white uppercase rounded-md p-2 hover:bg-green-500">
-          <Link to="/create-listing">Create Listing</Link>
+        <Link to="/create-listing">
+        <button type="button" className="w-full bg-green-700  text-white uppercase rounded-md p-2 hover:bg-green-500">
+         Create Listing
         </button>
+        </Link>
       </form>
       <div className="flex justify-between my-2 text-red-700 ">
         <span onClick={handleDelete} className="cursor-pointer hover:text-red-400">
