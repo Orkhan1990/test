@@ -16,10 +16,13 @@ const Profile = () => {
   const [fileProgress, setFileProgress] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const[updateProfileSuccess,setUpdateProfileSuccess]=useState(false);
+  const[listingsError,setListingsError]=useState(false);
+  const[listings,setListings]=useState([]);
   const dispatch=useDispatch();
   const fileRef = useRef(null);
   console.log(fileProgress);
   console.log(currentUser);
+  console.log((listingsError));
 
   const [formData, setFormData] = useState({});
 
@@ -34,7 +37,7 @@ const Profile = () => {
 
    try {
      const result = await fetch(
-       `http://localhost:3007/api/v1/profile/updateProfile/${currentUser._id}`,
+       `http://localhost:3007/api/v1/user/updateProfile/${currentUser._id}`,
        {
          method: "POST",
          headers: {
@@ -63,7 +66,7 @@ const Profile = () => {
   const handleDelete=async()=>{
     
     try {
-      const result=await fetch(`http://localhost:3007/api/v1/profile/deleteProfile/${currentUser._id}`,
+      const result=await fetch(`http://localhost:3007/api/v1/user/deleteProfile/${currentUser._id}`,
       {
         method:"DELETE"
       })
@@ -124,7 +127,42 @@ const Profile = () => {
     }
   }
 
+   //GET USER LISTINGS
 
+     const handleUserListings=async()=>{
+      try {
+        const result=await fetch(`http://localhost:3007/api/v1/user/listings/${currentUser._id}`);
+        const data=result.json();
+        
+        if(data.success===false){
+          setListingsError(true);
+          return;
+        }
+        setListings(data)
+        
+      } catch (error) {
+         setListingsError(error.message)
+      }
+     }
+
+     //DELETE LISTING
+
+     const deleteListing=async(id)=>{
+      try {
+           const result=await fetch(`http://localhost:3007/api/v1/listing/deleteListing/${id}`,{
+            method:"DELETE"
+           })
+
+           const data=await result.json();
+           if(data.success==false){
+            console.log(data.message);
+            return;
+           }
+           setListings((prev)=>prev.filter((i)=>i._id!=id));
+      } catch (error) {
+        console.log(error);
+      }
+     }
 
   return (
     <div className="max-w-[400px] mx-auto text-center mt-10">
@@ -192,9 +230,26 @@ const Profile = () => {
       </div>
       {error&&(<span className="text-red-700 text-sm">{error.message}</span>)}
       {updateProfileSuccess&&(<span className="text-green-700 text-sm">User is updated successfuly!</span>)}
-      <span className="text-green-700 cursor-pointer hover:text-green-400">
+      <span onClick={handleUserListings} className="text-green-700 cursor-pointer hover:text-green-400">
         Show listing
       </span>
+      {listings&&listings.length>0&& listings.map((listing,index)=>(
+        <div key={index}>
+          <h1 className="text-center">Your Listing</h1>
+          <div className="flex justify-between items-center border border-gray-400 p-2">
+              <Link  to={`/listing/${listing._id}`}>
+            <img src={listing.imagesUrl[0]} alt="picture" className="h-16 w-16 object-contain rounded-lg"/>
+            <h2 className="font-semibold truncate">{listing.name}</h2>
+            </Link>
+            <div className="flex flex-col">
+              <span onClick={()=>deleteListing(listing._id)} className="text-red-700 uppercase">Delete</span>
+              <Link to={`/update-listing/${listing._id}`}>
+              <span className="text-green-700 uppercase">Edit</span>
+              </Link>
+            </div>
+          </div>
+          </div>
+      ))}
     </div>
   );
 };

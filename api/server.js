@@ -36,7 +36,7 @@ app.use((error,req,res,next)=>{
 const port=process.env.PORT||9000;
 
 app.use("/api/v1/auth",authRouter);
-app.use('/api/v1/profile',userRouter);
+app.use('/api/v1/user',userRouter);
 app.use('/api/v1/listing',listingRouter);
 
 mongoose.connect(process.env.MONGODB).then(()=>

@@ -7,6 +7,7 @@ import {
 import { useState } from "react";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 const CreateListing = () => {
   const [files, setFiles] = useState([]);
@@ -15,6 +16,7 @@ const CreateListing = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  const navigate=useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -134,7 +136,7 @@ const CreateListing = () => {
     }
     try {
       const result = await fetch(
-        `http://localhost:3007/api/v1/listing/createListing`,
+        "http://localhost:3007/api/v1/listing/createListing",
         {
           method: "POST",
           headers: {
@@ -146,6 +148,7 @@ const CreateListing = () => {
       const data = await result.json();
       console.log(data);
       setLoading(false);
+      navigate(`/listing/${data._id}`)
       if (data.success === false) {
         setError(data.message);
         setLoading(false);
@@ -300,7 +303,6 @@ const CreateListing = () => {
                     id="dicountPrice"
                     minLength="1"
                     max="1000"
-                    required
                     onChange={handleChange}
                     value={formData.discountPrice}
                   />
