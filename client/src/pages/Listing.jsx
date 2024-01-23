@@ -6,6 +6,8 @@ import { Navigation} from 'swiper/modules';
 import 'swiper/css/bundle';
 import { CiLocationOn } from "react-icons/ci";
 import { FaBath, FaBed, FaChair, FaParking } from "react-icons/fa";
+import {useSelector} from  'react-redux';
+import Contact from "../components/Contact";
 
 
 
@@ -16,6 +18,7 @@ const Listing = () => {
   const [error,setError]=useState(false);
   const[showEmailMessage,setShowEmailMessage]=useState(false);
   const{id}=useParams();
+  const{currentUser}=useSelector(state=>state.user)
   console.log(id);
 
   useEffect(()=>{
@@ -40,9 +43,7 @@ const Listing = () => {
     fetchData();
   },[id])
 
-  const contactLandlord=()=>{
-    setShowEmailMessage(true)
-  }
+  
   return (
     <>
       {loading&&(<p className="text-2xl text-center my-16">Loading.....</p>)}
@@ -91,11 +92,9 @@ const Listing = () => {
                   </li> 
                  </ul>
                  {showEmailMessage&&(
-                  <form >
-                    <p>Contact </p>
-                  </form>
+                  <Contact data={data}/>
                  )}
-                 {!showEmailMessage&&(<button onClick={contactLandlord} className="w-full bg-gray-700 text-white uppercase rounded-md">Contact Landlord</button>
+                 {currentUser&&currentUser._id!==data.userRef&&!showEmailMessage&&(<button onClick={()=>setShowEmailMessage(true)} className="w-full bg-gray-700 text-white uppercase rounded-md">Contact Landlord</button>
 )}
             </div>
          </>

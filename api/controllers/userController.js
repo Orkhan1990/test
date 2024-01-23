@@ -59,3 +59,17 @@ export const getUserListings=async(req,res,next)=>{
         next(error)
     }
 }
+
+export const getUser=async()=>{
+    try {
+        const user=await User.findById(req.params.id);
+        if(!user){
+            return res.status(401).json({success:false,message:"User not exist!"})
+        }
+
+        const{password:pass,...rest}=user._doc
+        res.status(200).json(rest);
+    } catch (error) {
+           next(error);
+    }
+}
