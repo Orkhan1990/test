@@ -60,14 +60,17 @@ const Listing = () => {
             }
             </Swiper>   
             <div className="max-w-5xl mx-auto">
-                <h2 className="font-semibold">{data.name}-${data.regularPrice}/month</h2>
+                <h2 className="font-semibold">{data.name}-${" "}
+                {data.offer?data.discountPrice.toLocaleString('en-US'):data.regularPrice.toLocaleString("en-US")}
+                {data.type==="rent"&&" /  month"}
+                </h2>
                  <div className="flex gap-1">
                  <CiLocationOn className="text-green-700" />
                  <p>{data.address}</p>
                  </div>
                  <div className="flex gap-1">
                   <button className="text-white bg-red-700 p-1 rounded-md">{data.type==="rent"?"For Rent":"For Sale"}</button>
-                  {data.offer&&(<button className="text-white bg-green-700 p-1 rounded-md">{(+data.regularPrice)-(+data.discountPrice)}</button>)}
+                  {data.offer&&(<button className="text-white bg-green-700 p-1 rounded-md">{(+data.regularPrice)-(+data.discountPrice)} OFF</button>)}
                  </div>
                  <p className="text-slate-800"><span className="font-semibold text-black">Description - {" "}</span>{data.description}</p>
                  <ul className="flex gap-6 items-center flex-wrap">
