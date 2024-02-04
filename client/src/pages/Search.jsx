@@ -4,7 +4,7 @@ import ListingItem from "../components/ListingItem";
 
 const Search = () => {
   const [sidebarData, setSidebarData] = useState({
-    searchTerm: "",
+    searchTerm:"",
     type: "all",
     offer: false,
     parking: false,
@@ -14,6 +14,7 @@ const Search = () => {
   });
   const[listings,setListings]=useState([]);
   const[loading,setLoading]=useState(false);
+  const[showMore,setShowMore]=useState(false);
  const navigate=useNavigate();
   const handleChange=(e)=>{
     if(e.target.id==="all"||e.target.id==="rent"||e.target.id==="sale"){
@@ -59,9 +60,15 @@ const Search = () => {
           
      const fetchsearchData=async()=>{
            setLoading(true)
+           setShowMore(false);
            const searchURLParams=urlParams.toString();
            const result=await fetch(`http://localhost:3007/api/v1/listing/get?${searchURLParams}`);
            const data=await result.json();
+           if(data.length>8){
+            setShowMore(true);
+           }else{
+            setShowMore(false)
+           }
            setListings(data);
            setLoading(false);
      }
@@ -81,6 +88,21 @@ const Search = () => {
     urlParams.set("order",sidebarData.order);
     const searchQuery=urlParams.toString();
     navigate(`/search?${searchQuery}`);
+  }
+  console.log(listings);
+  const handleShowMore=async()=>{
+    const startIndex=listings.length;
+    const urlParams=new URLSearchParams(location.search);
+    urlParams.set("startIndex",startIndex);
+    const searchQuery=urlParams.toString();
+    const result=await fetch(`http://localhost:3007/api/v1/listing/get?${searchQuery}`);
+    const data=await result.json();
+    if(data.length<9){
+         setShowMore(false);
+    }
+    setListings([...listings,...data])
+    
+
   }
   return (
     <div className="flex flex-col md:flex-row ">
@@ -149,14 +171,16 @@ const Search = () => {
       </div>
       <div className="p-10 flex-1">
         <p className="text-xl font-semibold">Listing results:</p>
-        <div>
-          
+        <div className="flex  gap-4 ">
            {!loading&&listings.length===0&&(<p>No Listing Found!</p>)}
-           {loading&&(<p>Loading....</p>)}
+           {loading&&!listings&&(<p>Loading....</p>)}
            {!loading&&listings&&listings.map((listing)=>(
-            <ListingItem key={listing.listing_id} listing={listing}/>
+            <ListingItem key={listing._id} listing={listing}/>
            ))}
         </div>
+          {
+            showMore&&listings&&(<button onClick={handleShowMore} className="text-green-700 p-7 text-center w-full hover:underline">Show more</button>)
+          }
       </div>
     </div>
   );

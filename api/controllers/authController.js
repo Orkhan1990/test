@@ -18,7 +18,7 @@ export const signIn=async(req,res,next)=>{
             return res.status(404).json({message:"Password not match!",success:false})
          }
          const token=jwt.sign({id:user._id},process.env.JWT_SECRET);
-         res.cookie("access_token",token,{httpOnly:true})
+        //  res.cookie("access_token",token,{secure:false,httpOnly:false})
          const{password:pass,...rest}=user._doc
          res.status(201).json({rest,token})
 
@@ -59,7 +59,7 @@ export const google=async(req,res,next)=>{
     if(user){
         const token=jwt.sign({id:user._id},process.env.JWT_SECRET);
         const {password:pass,...rest}=user._doc;
-        res.cookie("access_token",token,{httpOnly:true});
+        // res.cookie("access_token",token,{httpOnly:false,secure:true});
        return res.status(201).json({rest,token})  
     }else{
         const autoGeneratePassword=(Math.random().toString(30).slice(-8))+(Math.random().toString(30).slice(-8));
@@ -72,7 +72,7 @@ export const google=async(req,res,next)=>{
          })
          await newUser.save();
          const token=jwt.sign({id:newUser._id},process.env.JWT_SECRET);
-         res.cookie("access_token",token,{httpOnly:true})
+        //  res.cookie("access_token",token,{secure:true,httpOnly:false})
          const {password:pass,...rest}=newUser._doc;
          console.log(newUser);
        return  res.status(201).json({token,rest})

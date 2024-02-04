@@ -4,10 +4,10 @@ import {MdLocationOn} from 'react-icons/md'
 
 const ListingItem = ({ listing }) => {
   return (
-    <div className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg">
+    <div className="bg-white shadow-md w-full sm:w-[330px] hover:shadow-lg transition-shadow overflow-hidden rounded-lg">
       <Link to={`/listing/${listing._id}`}>
         <img
-          src={listing.imageURLs[0]}
+          src={listing.imageUrls[0]}
           alt="picture"
           className="h-[320px] sm:h-[220px] object-cover w-full hover:scale-105 transition-scale duration-300"
         />
@@ -35,6 +35,7 @@ const ListingItem = ({ listing }) => {
     </div>
   );
 };
+
 
 ListingItem.propTypes = {
   listing: PropTypes.object,

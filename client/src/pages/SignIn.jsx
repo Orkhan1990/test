@@ -7,8 +7,10 @@ import {
   signInLoading,
 } from "../redux-toolkit/user/userSlice.js";
 import OAuth from "../components/OAuth.jsx";
+import {useCookies} from "react-cookie";
 
 const SignIn = () => {
+  const [cookies,setCookies]=useCookies(["access_token"])
 
   const [formData, setFormData] = useState({
     email: "",
@@ -36,8 +38,9 @@ const SignIn = () => {
       });
 
       const data = await result.json();
+      setCookies("access_token",data.token)
       dispatch(signInSuccess(data.rest));
-      console.log(data);
+      console.log(data,cookies);
       if (data.success === false) {
         dispatch(signInError(data.message));
         return;
